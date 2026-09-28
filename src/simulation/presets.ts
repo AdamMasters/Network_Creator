@@ -60,6 +60,7 @@ export interface Preset {
   name: string
   description: string
   level: Level
+  focus: string[]
   nodes: NetNode[]
   edges: NetEdge[]
 }
@@ -71,6 +72,7 @@ const starLan: Preset = {
   name: 'Star Topology (LAN)',
   description: 'Classic star topology: a central switch connecting four workstations. Good for exploring LAN basics, switch MAC tables, and ping.',
   level: 'ks3',
+  focus: ['LAN', 'switching', 'Ethernet'],
   nodes: [
     node('sw1',  'switch', 'Switch',  '',              { x: 320, y: 240 }),
     node('pc1',  'pc',     'PC 1',    '192.168.1.11',  { x: 120, y: 80  }),
@@ -93,6 +95,7 @@ const homeNetwork: Preset = {
   name: 'Home Network',
   description: 'Typical home broadband setup: ISP → Domestic Gateway (combined router, switch, WAP and firewall) → wired PCs and wireless laptop.',
   level: 'ks4',
+  focus: ['WLAN', 'DHCP', 'gateway'],
   nodes: [
     node('cloud1',   'cloud',    'Internet',       '0.0.0.0',       { x: 20,  y: 230 },
       { notes: 'Represents your ISP and the public internet.' }),
@@ -132,6 +135,7 @@ const schoolNetwork: Preset = {
   name: 'School Network',
   description: 'School infrastructure: Internet → Firewall → Router → Core switch → servers + classroom switch + WAP. Demonstrates network segmentation and security.',
   level: 'ks4',
+  focus: ['firewall', 'servers', 'segmentation'],
   nodes: [
     node('cloud1',  'cloud',    'Internet',       '0.0.0.0',        { x: 20,  y: 330 }),
     node('fw1',     'firewall', 'Firewall',       '10.0.0.1',       { x: 200, y: 330 },
@@ -189,6 +193,7 @@ const clientServer: Preset = {
   name: 'Client-Server Model',
   description: 'A web server and DNS server on a LAN, with three client PCs. Try nslookup and curl from a PC terminal.',
   level: 'ks4',
+  focus: ['client-server', 'DNS', 'WWW'],
   nodes: [
     node('sw1',   'switch', 'Switch',      '',              { x: 320, y: 280 }),
     node('dns1',  'dns',    'DNS Server',  '192.168.1.53',  { x: 100, y: 100 },
@@ -219,6 +224,7 @@ const meshNetwork: Preset = {
   name: 'Mesh / WAN Topology',
   description: 'Three sites connected via routers with redundant paths — like the internet backbone. Shows how packets can take multiple routes.',
   level: 'ks5',
+  focus: ['WAN', 'routing', 'redundancy'],
   nodes: [
     node('cloud1',   'cloud',  'Internet',       '0.0.0.0',       { x: 320, y: 30  }),
     // Site A
@@ -262,10 +268,85 @@ const meshNetwork: Preset = {
   ],
 }
 
+// ─── 6. Shopping centre / multi-area infrastructure ────────────────────────────
+
+const shoppingCentreNetwork: Preset = {
+  id: 'shopping-centre-network',
+  name: 'Shopping Centre Infrastructure',
+  description: 'A multi-area retail network linking management offices, shops, guest Wi-Fi, CCTV, and an internet-facing portal. Useful for recommending and justifying hardware across a larger site.',
+  level: 'ks5',
+  focus: ['hardware roles', 'LAN/WAN', 'wireless'],
+  nodes: [
+    node('cloud1',   'cloud',    'Internet / Cloud',      '0.0.0.0',      { x: 20,  y: 320 },
+      { notes: 'Represents the ISP, internet services, and cloud-hosted platforms. Use it to discuss WAN access, cloud advantages, and the difference between the internet and the web.' }),
+    node('fw1',      'firewall', 'Perimeter Firewall',    '172.20.0.1',   { x: 190, y: 320 },
+      { rules: [
+          { id: 'r1', direction: 'in', protocol: 'TCP', srcIp: '*', dstIp: '*', port: '80',  action: 'allow' },
+          { id: 'r2', direction: 'in', protocol: 'TCP', srcIp: '*', dstIp: '*', port: '443', action: 'allow' },
+          { id: 'r3', direction: 'in', protocol: 'ANY', srcIp: '*', dstIp: '*', port: '*',   action: 'deny' },
+        ],
+        notes: 'Filters public traffic before it reaches the centre. A realistic design would often place public services behind stricter DMZ controls.' }),
+    node('router1',  'router',   'Centre Router',         '10.50.0.1',    { x: 370, y: 320 },
+      { wanIp: '172.20.0.2',
+        routingTable: [
+          { destination: '0.0.0.0',     subnet: '0.0.0.0',       gateway: '172.20.0.1', iface: 'eth0', metric: 0 },
+          { destination: '10.50.0.0',   subnet: '255.255.255.0', gateway: '0.0.0.0',    iface: 'eth1', metric: 0 },
+          { destination: '10.50.10.0',  subnet: '255.255.255.0', gateway: '0.0.0.0',    iface: 'eth2', metric: 1 },
+          { destination: '10.50.20.0',  subnet: '255.255.255.0', gateway: '0.0.0.0',    iface: 'eth3', metric: 1 },
+        ],
+        dhcpEnabled: true,
+        dhcpPool: '100-200',
+        notes: 'Acts as the default gateway between local LANs and the WAN. Learners can justify routers here because traffic must move between different network areas and out to the internet.' }),
+    node('sw-core',  'switch',   'Core Switch',           '',             { x: 560, y: 320 },
+      { notes: 'High-capacity wired backbone for the shopping centre. Good for discussing why switches suit fast local LAN links.' }),
+    node('dns1',     'dns',      'DNS Server',            '10.50.0.53',   { x: 780, y: 100 },
+      { dnsRecords: [
+          { id: 'dr1', hostname: 'portal.mall.local',    ip: '10.50.0.80' },
+          { id: 'dr2', hostname: 'stock.mall.local',     ip: '10.50.0.20' },
+          { id: 'dr3', hostname: 'helpdesk.mall.local',  ip: '10.50.0.30' },
+        ],
+        notes: 'Internal DNS helps staff reach services by name. Use this node to explain hostname-to-IP resolution and the difference between IPs, URLs, and MAC addresses.' }),
+    node('web1',     'web',      'Mall Portal',           '10.50.0.80',   { x: 980, y: 100 },
+      { notes: 'Represents a web platform used for public information or tenant services. Useful for discussing the WWW as one service that runs over the wider internet.' }),
+    node('srv1',     'server',   'Stock Server',          '10.50.0.20',   { x: 780, y: 220 },
+      { notes: 'Central stock and reporting system used by staff and shop systems. A dedicated server demonstrates client-server networking and why reliable wired links matter.' }),
+    node('pc-mgr',   'pc',       'Management PC',         '10.50.0.101',  { x: 980, y: 220 },
+      { notes: 'Office client for management staff. A good place to run ping, nslookup, curl, and discuss client-server access to shared services.' }),
+    node('sw-retail','switch',   'Retail Switch',         '',             { x: 780, y: 390 },
+      { notes: 'Local switch for shop tills and service desks. Wired links suit payment and stock devices because they are reliable and low-latency.' }),
+    node('pc-pos1',  'pc',       'Shop POS 1',            '10.50.10.11',  { x: 980, y: 340 },
+      { notes: 'Represents a point-of-sale terminal. Learners can justify wired Ethernet for payment devices where stability matters more than mobility.' }),
+    node('pc-pos2',  'pc',       'Shop POS 2',            '10.50.10.12',  { x: 980, y: 430 },
+      { notes: 'A second POS terminal for comparing client needs in different retail areas.' }),
+    node('wap1',     'wap',      'Guest Wi-Fi AP',        '10.50.20.2',   { x: 780, y: 560 },
+      { ssid: 'Mall-Guest',
+        wpaKey: 'visit-the-mall',
+        band: '5GHz',
+        notes: 'Provides WLAN access for visitors and roaming staff devices. Use it to compare Ethernet with Wi-Fi and discuss interference, congestion, and range.' }),
+    node('laptop1',  'laptop',   'Guest Laptop',          '10.50.20.51',  { x: 980, y: 560 },
+      { notes: 'Mobile client for exploring WLAN use, URL browsing, and the trade-offs of wireless access.' }),
+  ],
+  edges: [
+    edge('e1',  'cloud1',    'fw1'),
+    edge('e2',  'fw1',       'router1'),
+    edge('e3',  'router1',   'sw-core'),
+    edge('e4',  'sw-core',   'dns1'),
+    edge('e5',  'sw-core',   'web1'),
+    edge('e6',  'sw-core',   'srv1'),
+    edge('e7',  'sw-core',   'pc-mgr'),
+    edge('e8',  'sw-core',   'sw-retail'),
+    edge('e9',  'sw-retail', 'pc-pos1'),
+    edge('e10', 'sw-retail', 'pc-pos2'),
+    edge('e11', 'sw-core',   'wap1'),
+    edge('e12', 'wap1',      'laptop1', true),
+  ],
+}
+
 export const PRESETS: Preset[] = [
   starLan,
   homeNetwork,
   schoolNetwork,
   clientServer,
   meshNetwork,
+  shoppingCentreNetwork,
 ]

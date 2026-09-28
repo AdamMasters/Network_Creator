@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X, Plus, Trash2, Power } from 'lucide-react'
 import { useNetworkStore } from '../store'
 import type { FirewallRule, DnsRecord } from '../types'
+import { getLearningSnapshot } from '../simulation/education'
 
 const LEVEL_ORDER = { ks3: 3, ks4: 4, ks5: 5 } as const
 function atLeast(current: string, min: 'ks3' | 'ks4' | 'ks5') {
@@ -41,6 +42,7 @@ export default function ConfigPanel({ nodeId, onClose }: Props) {
   if (!node) return null
 
   const { data } = node
+  const learning = getLearningSnapshot(data.deviceType)
   const upd = (patch: Parameters<typeof updateNodeData>[1]) => updateNodeData(nodeId, patch)
 
   function handleAddRoute() {
@@ -137,6 +139,28 @@ export default function ConfigPanel({ nodeId, onClose }: Props) {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {tab === 'basic' && (
           <>
+            <div className="rounded-lg border border-blue-100 bg-blue-50/70 px-3 py-3 space-y-2">
+              <div>
+                <h3 className="text-sm font-semibold text-blue-900">Learning focus</h3>
+                <p className="text-xs text-blue-800 mt-0.5">{learning.summary}</p>
+              </div>
+              <ul className="space-y-1">
+                {learning.keyIdeas.map((idea) => (
+                  <li key={idea} className="text-xs text-blue-900 leading-relaxed">• {idea}</li>
+                ))}
+              </ul>
+              <div>
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-blue-700 mb-1">Compare with</div>
+                <ul className="space-y-1">
+                  {learning.compare.map((item) => (
+                    <li key={item} className="text-xs text-blue-800 leading-relaxed">• {item}</li>
+                  ))}
+                </ul>
+              </div>
+              {learning.caveat && (
+                <p className="text-[11px] text-blue-700 italic">{learning.caveat}</p>
+              )}
+            </div>
             <Field label="Label" value={data.label} onChange={(v) => upd({ label: v })} />
             {hasIp && (
               <>
