@@ -1,6 +1,6 @@
 # Networx
 
-A browser-based network emulator for teaching computer networking concepts at GCSE and A Level (OCR specifications J277 and H446).
+A browser-based network emulator for teaching computer networking concepts at GCSE and/or A Level courses.
 
 **[Live demo →](https://milesberry.net/networx)**
 
@@ -12,7 +12,7 @@ Networx lets you build virtual networks by dragging hardware components onto a c
 
 - **Run terminal commands** on PCs, laptops, and servers — `ping`, `traceroute`, `ipconfig`, `nslookup`, `curl`, `ssh`, and more
 - **Browse the web** — a built-in browser on PC/Laptop/Server nodes renders pages served by Web Server nodes, resolves hostnames via local DNS, and simulates internet access through a Cloud node
-- **SSH between nodes** — `ssh <ip>` opens a persistent session; all subsequent commands run as the remote device until you type `exit`
+- **SSH between nodes** — `ssh <ip>` opens a persistent session; all subsequent commands run on the remote device until you type `exit`
 - **Assign IPs with DHCP** — routers run a DHCP server; clients request leases with `dhclient` (Linux) or `ipconfig /renew` (Windows), animating the full four-way handshake
 - **Configure DNS records** — DNS Server nodes hold A records that resolve hostnames across the network
 - **Ping domain names** — `ping google.com` resolves via DNS and routes through the internet node
@@ -20,27 +20,64 @@ Networx lets you build virtual networks by dragging hardware components onto a c
 - **Configure routers** — add static routing table entries
 - **Set firewall rules** — allow/deny by protocol, port, and IP
 - **Configure wireless access points** — SSID, WPA key, 2.4/5 GHz band
-- **Load preset scenarios** — five built-in topologies covering key exam topics
+- **Inspect device learning notes** — each device now includes a learner-facing explanation of its role, comparisons, and key ideas
+- **Use the in-app concepts panel** — searchable guides cover LAN/WLAN/WAN, DNS, cloud, protocols, addressing, transmission media, performance factors, and more
+- **Load preset scenarios** — six built-in topologies covering LANs, WLANs, WANs, client-server systems, security, and infrastructure planning
 - **Save and share** — export your network as a `.json` file and import it elsewhere
 
 ## Preset scenarios
 
-| Scenario | Covers |
+| Scenario | Main coverage |
 |---|---|
-| Star Topology (LAN) | Switch MAC tables, LAN addressing, ping |
-| Home Network | NAT, router, WAP, wired + wireless clients |
-| School Network | Firewall rules, network segmentation, servers |
-| Client-Server Model | DNS resolution, HTTP, `nslookup`, `curl` |
-| Mesh / WAN Topology | Redundant paths, inter-site routing, internet backbone |
+| Star Topology (LAN) | LAN basics, Ethernet switching, MAC learning, ping |
+| Home Network | Home gateway, WLAN, DHCP, internet access, wired vs wireless trade-offs |
+| School Network | Firewall rules, DNS, servers, segmentation, classroom Wi-Fi |
+| Client-Server Model | Client-server architecture, WWW vs internet discussion, DNS resolution, `nslookup`, `curl` |
+| Mesh / WAN Topology | WAN concepts, routing, redundancy, multiple paths, internet-backbone style links |
+| Shopping Centre Infrastructure | Multi-area network planning, hardware justification, guest Wi‑Fi, POS/client devices, public portal, cloud/WAN access |
 
-## Curriculum links
+## Educational coverage
 
-- **OCR GCSE Computer Science J277** — Networks (1.3): protocols, hardware, topologies, internet, security
-- **OCR A Level Computer Science H446** — Communication and networking (1.3): IP, TCP/IP stack, packet switching, hardware, client-server
+Where practical, Networx now supports or highlights:
 
-Spec links:
-- [GCSE J277](https://www.ocr.org.uk/Images/558027-specification-gcse-computer-science-j277.pdf)
-- [A Level H446](https://www.ocr.org.uk/images/170844-specification-accredited-a-level-gce-computer-science-h446.pdf)
+- **LAN, WLAN, and WAN** distinctions, common uses, and typical speed/latency differences
+- **Client-server and peer-to-peer** models
+- **Network performance factors** such as bandwidth, latency, congestion, interference, device capability, protocols, topology, and redundancy
+- **Hardware roles** including PCs/clients, servers, switches, routers, wireless access points, firewalls, gateways, DNS servers, web servers, and cloud/internet connections
+- **Shopping-centre style infrastructure planning** through the new preset scenario
+- **WWW vs internet**
+- **IP, URL, and MAC address** distinctions
+- **DNS operation and name resolution**
+- **Cloud computing** advantages and disadvantages
+- **Connection modes and transmission media** including wired Ethernet, fibre concepts (FTTC/FTTP), Wi‑Fi, Bluetooth, microwave, satellite, and infrared at a teaching level
+- **Protocols and standards** such as Ethernet, Wi‑Fi, Bluetooth, TCP/IP, DNS, HTTP, HTTPS, SMTP, POP3, and IMAP through the concept panel and existing simulator behaviour
+- **Mobile generations 2G / 2.5G / 3G / 4G / 5G** at a conceptual level in the learning content
+
+## Educational limitations
+
+Networx is a teaching emulator, not a full packet-accurate network simulator. In particular:
+
+- **Performance values are illustrative** rather than measured against real hardware
+- **Mobile generations** are explained conceptually; radio cells, spectrum, and carrier infrastructure are not simulated
+- **Transmission media** comparisons are educational summaries; the app models links as wired or wireless abstractions
+- **Cloud/internet behaviour** is simplified into a learner-friendly WAN/public-network model
+- **Security and routing** features are simplified for classroom exploration rather than enterprise-grade accuracy
+
+## Curriculum / learning-objective links
+
+Networx is suitable for teaching or revising topics such as:
+
+- **LAN / WLAN / WAN** structure, uses, and relative performance
+- **Client-server vs peer-to-peer** networking
+- **Hardware roles** in local and wider-area networks
+- **IP, URL, MAC, DNS, and TCP/IP**
+- **WWW vs internet**
+- **Cloud computing**
+- **Connection methods and transmission media**
+- **Ethernet, Wi‑Fi, Bluetooth, and common network/application protocols**
+- **Mobile networking generations** at an introductory conceptual level
+
+The interactive presets, terminal commands, browser, configuration panels, and concepts library are designed to support learners exploring these objectives through practical examples.
 
 ## Running locally
 
@@ -50,6 +87,12 @@ npm run dev
 ```
 
 Requires Node 18+.
+
+## Build
+
+```bash
+npm run build
+```
 
 ## Tech stack
 

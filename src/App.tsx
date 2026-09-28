@@ -192,6 +192,16 @@ function PresetPicker() {
                     </span>
                   </div>
                   <div className="text-xs text-gray-500 leading-tight mt-0.5">{p.description}</div>
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {p.focus.map((focus) => (
+                      <span
+                        key={focus}
+                        className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 font-medium"
+                      >
+                        {focus}
+                      </span>
+                    ))}
+                  </div>
                 </div>
                 {confirmId === p.id ? (
                   <div className="flex items-center gap-1 flex-shrink-0 mt-0.5">
@@ -338,6 +348,7 @@ function Toolbar({ connectionType, setConnectionType, onDeleteSelected, onShowIn
             connectionType === 'wired' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
           onClick={() => setConnectionType('wired')}
+          title="Wired Ethernet-style link: usually faster, lower latency, and less interference than wireless"
         >
           <Cable size={13} /> Ethernet
         </button>
@@ -346,6 +357,7 @@ function Toolbar({ connectionType, setConnectionType, onDeleteSelected, onShowIn
             connectionType === 'wireless' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
           onClick={() => setConnectionType('wireless')}
+          title="Wireless Wi-Fi-style link: flexible and mobile, but affected by distance, congestion, and interference"
         >
           <Wifi size={13} /> Wireless
         </button>

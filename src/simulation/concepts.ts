@@ -10,21 +10,24 @@ export interface Concept {
 export const concepts: Concept[] = [
   {
     id: 'lan-wan',
-    title: 'LAN & WAN',
+    title: 'LAN, WLAN & WAN',
     level: 'Both',
-    tags: ['network types', 'LAN', 'WAN'],
-    summary: 'Local Area Networks connect devices in a limited geographic area; Wide Area Networks span large distances.',
-    body: `A **Local Area Network (LAN)** connects devices within a building or campus. It typically uses Ethernet cables or Wi-Fi and is owned by a single organisation.
+    tags: ['network types', 'LAN', 'WLAN', 'WAN'],
+    summary: 'LANs and WLANs connect nearby devices; WANs connect sites over much larger distances.',
+    body: `A **Local Area Network (LAN)** connects devices within a building or campus. It is usually owned by one organisation and often uses Ethernet for fast, low-latency local communication.
+
+A **Wireless LAN (WLAN)** is still a LAN, but it uses Wi-Fi radio instead of cables for some or all client connections. WLANs are flexible and mobile, but speed is affected more by distance, interference, and shared airtime.
 
 A **Wide Area Network (WAN)** covers a large geographic area. The Internet is the largest WAN. WANs connect multiple LANs together, often using leased lines or the public telephone network.
 
 **Key differences:**
-| | LAN | WAN |
+| | LAN / WLAN | WAN |
 |---|---|---|
-| Scale | Building/campus | Country/world |
-| Speed | High (1 Gbps+) | Lower, variable |
-| Owner | Single org | Multiple orgs |
-| Cost | Low setup | High setup |`,
+| Scale | Room, building, campus | Town, country, world |
+| Common uses | School, office, home, shopping centre | Connecting sites, cloud access, the internet |
+| Speed | Usually higher and more predictable | Usually lower and more variable |
+| Delay | Lower latency | Higher latency |
+| Owner | Single user or organisation | Often multiple providers/organisations |`,
   },
   {
     id: 'tcp-ip',
@@ -364,5 +367,120 @@ The **internet uses packet switching**. TCP ensures packets are reassembled in o
 - Ongoing subscription costs
 - Vendor lock-in
 - Latency higher than local storage`,
+  },
+  {
+id: 'network-performance',
+title: 'Network Performance Factors',
+level: 'Both',
+tags: ['performance', 'bandwidth', 'latency', 'congestion', 'interference'],
+summary: 'Network speed is affected by capacity, delay, device quality, and the environment around the connection.',
+body: `When learners say a network is "slow", several different factors might be involved:
+
+- **Bandwidth / capacity** – the maximum amount of data that can be moved each second
+- **Latency** – the delay before data starts arriving
+- **Distance** – longer links often increase delay and reduce signal quality
+- **Interference** – especially on wireless networks using radio
+- **Congestion** – too many devices competing for the same link
+- **Device capability** – older routers, switches, laptops, or access points can become bottlenecks
+- **Protocols** – some protocols add reliability checks, encryption, or retries that trade speed for accuracy or security
+- **Topology and redundancy** – extra paths can improve resilience, but some designs also add more hops
+
+**Examples:**
+- A wired LAN in one room is usually faster than a WAN link to a cloud service.
+- A crowded 2.4 GHz WLAN may perform worse than a nearby wired Ethernet link.
+- A weak client device can limit throughput even when the rest of the network is fast.`,
+  },
+  {
+id: 'www-vs-internet',
+title: 'WWW vs Internet',
+level: 'Both',
+tags: ['WWW', 'internet', 'web', 'HTTP'],
+summary: 'The internet is the network infrastructure; the World Wide Web is one service that runs over it.',
+body: `The **internet** is the global network of networks — the routers, links, protocols, and addressing that move data between devices.
+
+The **World Wide Web (WWW)** is a service that runs on top of that internet infrastructure. The web normally uses **HTTP** or **HTTPS** to move web pages between browsers and web servers.
+
+So:
+- **Internet** = the transport system
+- **WWW** = one application that uses that transport system
+
+Other internet services include:
+- **DNS** for name resolution
+- **Email** using SMTP/IMAP/POP
+- **SSH** for remote access
+- **Streaming, gaming, and cloud platforms**
+
+In Networx, the browser and web server model the **WWW**, while the cloud/internet node and routing behaviour model the wider **internet**.`,
+  },
+  {
+id: 'address-identifiers',
+title: 'IP, URL and MAC Addresses',
+level: 'Both',
+tags: ['IP', 'URL', 'MAC', 'addressing'],
+summary: 'Different identifiers are used for different jobs: MAC on the local link, IP across networks, and URLs for human-friendly web access.',
+body: `These identifiers are related, but they are not the same:
+
+| Identifier | Example | Used for |
+|---|---|---|
+| **MAC address** | aa:bb:cc:11:22:33 | Identifying a network interface on the local link |
+| **IP address** | 192.168.1.20 | Routing data between networks |
+| **URL** | https://portal.mall.local/help | Telling a browser which web resource to request |
+
+**How they work together:**
+1. A user enters a **URL**
+2. DNS resolves the hostname part to an **IP address**
+3. The local network uses **MAC addresses** to deliver each frame to the next device on the path
+
+A URL can include much more than a hostname, such as a path (\`/help\`) and protocol (\`https://\`).`,
+  },
+  {
+id: 'transmission-media',
+title: 'Transmission Media & Connection Modes',
+level: 'Both',
+tags: ['Ethernet', 'Wi-Fi', 'fibre', 'Bluetooth', 'satellite', 'infrared'],
+summary: 'Networks can use copper, fibre, radio, microwave, satellite, and infrared media depending on range, speed, and cost.',
+body: `**Wired copper Ethernet**
+- **Cat5e / Cat6 / Cat6a** are common twisted-pair cables for LANs
+- Usually low-latency and reliable
+- Often chosen for PCs, switches, printers, and POS terminals
+
+**Fibre**
+- **FTTC** (Fibre to the Cabinet) uses fibre for part of the route, then copper to the building
+- **FTTP** (Fibre to the Premises) keeps fibre all the way to the site
+- Very high capacity, good over long distances, and resistant to electromagnetic interference
+
+**Wireless**
+- **Radio / Wi-Fi** is common for WLANs and mobile access
+- **Microwave** can connect buildings or backhaul links when line-of-sight is available
+- **Satellite** reaches remote areas but usually has higher latency
+- **Infrared** is short-range and line-of-sight, so it is much less common in modern networking
+- **Bluetooth** is a short-range wireless standard for peripherals and personal-area links
+
+**General comparison:**
+- **Copper Ethernet** – strong local performance and low latency
+- **Fibre** – highest capacity and best long-distance performance
+- **Wireless** – flexible and mobile, but more affected by interference, congestion, and distance
+
+This emulator represents these media conceptually through wired and wireless links rather than modelling every electrical or optical property.`,
+  },
+  {
+id: 'mobile-generations',
+title: 'Mobile Generations (2G to 5G)',
+level: 'Both',
+tags: ['2G', 'GPRS', '3G', '4G', '5G', 'mobile'],
+summary: 'Mobile generations improve data speed, latency, and service capability over time, but they are represented conceptually here rather than fully simulated.',
+body: `Mobile generations are often taught as a progression in data capability:
+
+| Generation | Common teaching point |
+|---|---|
+| **2G (GSM)** | Digital voice and basic text messaging |
+| **2.5G (GPRS)** | Early packet data for simple internet access |
+| **3G** | Better mobile internet and multimedia |
+| **4G** | Faster broadband-style mobile data and lower latency |
+| **5G** | Higher capacity, lower latency, and support for many connected devices |
+
+**Important classroom idea:** newer generations are not just "more bars"; they usually offer better bandwidth, lower latency, and more efficient use of radio spectrum.
+
+Networx does **not** model real mobile radio cells, spectrum allocation, or carrier infrastructure. Use it to discuss the idea of wireless WAN/mobile access at an educational level, not to measure real 2G/3G/4G/5G behaviour.`,
   },
 ]
